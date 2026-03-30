@@ -114,6 +114,8 @@ class BorrowController
             'status' => $request['status']
         ]);
 
+        Book::where('id', $borrow->id_book)->increment('stock');
+
         http_response_code(200);
         echo json_encode([
             'code' => 200,
