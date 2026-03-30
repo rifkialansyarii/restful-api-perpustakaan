@@ -70,7 +70,7 @@ Capsule::schema()->create('users', function ($table) {
 
 Capsule::schema()->create('borrows', function ($table) {
     $table->id();
-    $table->char('borrow_code', 6)->unique();
+    $table->char('borrow_code', 15)->unique();
     $table->foreignId('id_user')->references('id')->on('users')->onDelete('cascade');
     $table->foreignId('id_book')->references('id')->on('books')->onDelete('cascade');
     $table->date('borrow_date');
