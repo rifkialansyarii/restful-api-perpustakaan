@@ -23,7 +23,6 @@
 
                 $pattern = "#^" . $route["path"] . "$#";
                 if(preg_match($pattern, $path, $variables) && $route["method"] == $method){
-                    
                     $controller = new $route["controller"];
                     $function = $route["function"];
 
@@ -38,7 +37,7 @@
                 }
             }
 
-            return json_encode([
+            echo json_encode([
                 'code' => 404,
                 'success' => false,
                 'message' => 'Resource not found'

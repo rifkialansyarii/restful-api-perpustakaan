@@ -93,4 +93,32 @@ class BorrowController
         ]);
 
     }
+
+    public function update(int $id){
+        $json_string = file_get_contents('php://input');
+        $request = json_decode($json_string, true);
+
+        $borrow = Borrow::find($id);
+        if(!$borrow){
+            http_response_code(404);
+            echo json_encode([
+                'code' => 404,
+                'success' => false,
+                'message' => 'Borrow record not found'
+            ]);
+            exit();
+        }
+
+        $borrow->update([
+            'return_date' => now()->format('Y-m-d'),
+            'status' => $request['status']
+        ]);
+
+        http_response_code(200);
+        echo json_encode([
+            'code' => 200,
+            'success' => true,
+            'message' => 'Book returned successfully'
+        ]);
+    }
 }
