@@ -82,6 +82,8 @@ class BorrowController
             'status' => $request['status']
         ]);
 
+        Book::where('id', $book->id)->decrement('stock');
+
 
         http_response_code(201);
         echo json_encode([
