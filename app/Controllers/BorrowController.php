@@ -10,7 +10,28 @@ use function Illuminate\Support\now;
 class BorrowController
 {
     public function index(){
-        
+        $borrows = Borrow::with(['user', 'book'])->get();
+        http_response_code(200);
+
+        $formattedData = $borrows->map(function($borrow) {
+            return [
+                "borrow_code" => $borrow->borrow_code,
+                "student" => $borrow->user->first_name . ' ' . $borrow->user->last_name,
+                "student_nisn" => $borrow->user->nisn,
+                "book_title" => $borrow->book->title,
+                "book_isbn" => $borrow->book->isbn,
+                "borrow_date" => $borrow->borrow_date,
+                "due_date" => $borrow->due_date,
+                "return_date" => $borrow->return_date,
+                "status" => $borrow->status 
+            ];
+        });
+
+        echo json_encode([
+            'code' => 200,
+            'success' => true,
+            'data' => $formattedData
+        ]);
     }
 
     private function generateBorrowCode()
