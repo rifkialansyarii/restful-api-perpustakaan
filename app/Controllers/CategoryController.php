@@ -2,32 +2,32 @@
 
 namespace App\Controllers;
 
-use App\Models\Author;
+use App\Models\Category;
 
-class AuthorController
+class CategoryController
 {
-    private function checkAuthor($author){
-        if(!$author){
+    private function checkCategory($category){
+        if(!$category){
             header('Content-Type: application/json; charset=utf-8');
             http_response_code(404);
             echo json_encode([
                 'code' => 404,
                 'success' => false,
-                'message' => 'Author record not found'
+                'message' => 'Category record not found'
             ]);
             exit();
         }
     }
 
     public function index(){
-        $author = Author::all();
+        $categories = Category::all();
 
         header('Content-Type: application/json; charset=utf-8');
         http_response_code(200);
         echo json_encode([
             'code' => 200,
             'success' => true,
-            'data' => $author
+            'data' => $categories
         ]);
         exit();
     }
@@ -36,8 +36,8 @@ class AuthorController
         $json_string = file_get_contents('php://input');
         $request = json_decode($json_string, true);
 
-        Author::create([
-            'name' => $request['author_name'],
+        Category::create([
+            'category_name' => $request['category_name'],
         ]);
 
         header('Content-Type: application/json; charset=utf-8');
@@ -45,7 +45,7 @@ class AuthorController
         echo json_encode([
             'code' => 201,
             'success' => true,
-            'message' => 'Author added successfully'
+            'message' => 'Category added successfully'
         ]);
         exit();
     }
@@ -54,33 +54,33 @@ class AuthorController
         $json_string = file_get_contents('php://input');
         $request = json_decode($json_string, true);
 
-        $author = Author::find($id);
-        $this->checkAuthor($author);
+        $category = Category::find($id);
+        $this->checkCategory($category);
     
-        $author->update(["name" => $request["author_name"]]);
+        $category->update(["category_name" => $request["category_name"]]);
 
         header('Content-Type: application/json; charset=utf-8');
         http_response_code(200);
         echo json_encode([
             'code' => 200,
             'success' => true,
-            'message' => 'Author Updated successfully'
+            'message' => 'Category Updated successfully'
         ]);
     }
 
     public function destroy(int $id){
-        $author = Author::find($id);
+        $category = Category::find($id);
         
-        $this->checkAuthor($author);
+        $this->checkCategory($category);
 
-        $author->delete();
+        $category->delete();
 
         header('Content-Type: application/json; charset=utf-8');
         http_response_code(200);
         echo json_encode([
             'code' => 200,
             'success' => true,
-            'message' => 'Author record deleted successfully'
+            'message' => 'Category record deleted successfully'
         ]);
     }
 }

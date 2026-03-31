@@ -23,4 +23,10 @@ Router::add("PATCH", "/authors/([0-9]+)", "App\Controllers\AuthorController", "u
 Router::add("DELETE", "/authors/([0-9]+)", "App\Controllers\AuthorController", "destroy");
 
 
+Router::add("GET", "/categories", "App\Controllers\CategoryController", "index");
+Router::add("POST", "/categories", "App\Controllers\CategoryController", "store");
+Router::add("PATCH", "/categories/([0-9]+)", "App\Controllers\CategoryController", "update");
+Router::add("DELETE", "/categories/([0-9]+)", "App\Controllers\CategoryController", "destroy");
+
+
 Router::run();
