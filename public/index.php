@@ -6,6 +6,7 @@ require_once __DIR__ . "/../bootstrap.php";
 use Base\Router;
 
 Router::add("GET", "/borrows", "App\Controllers\BorrowController", "index");
+Router::add("GET", "/borrows/([0-9]+)", "App\Controllers\BorrowController", "show");
 Router::add("POST", "/borrows", "App\Controllers\BorrowController", "store");
 Router::add("PATCH", "/borrows/([0-9]+)", "App\Controllers\BorrowController", "update");
 Router::add("DELETE", "/borrows/([0-9]+)", "App\Controllers\BorrowController", "destroy");

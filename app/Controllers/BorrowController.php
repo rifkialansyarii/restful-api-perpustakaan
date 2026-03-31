@@ -11,7 +11,6 @@ class BorrowController
 {
     public function index(){
         $borrows = Borrow::with(['user', 'book'])->get();
-        http_response_code(200);
 
         $formattedData = $borrows->map(function($borrow) {
             return [
@@ -27,6 +26,43 @@ class BorrowController
             ];
         });
 
+        header('Content-Type: application/json; charset=utf-8');
+        http_response_code(200);
+        echo json_encode([
+            'code' => 200,
+            'success' => true,
+            'data' => $formattedData
+        ]);
+    }
+
+    public function show($id){
+        $borrow = Borrow::with(['user', 'book'])->find($id);
+
+        if(!$borrow){
+            header('Content-Type: application/json; charset=utf-8');
+            http_response_code(404);
+            echo json_encode([
+                'code' => 404,
+                'success' => false,
+                'message' => 'Borrow record is not found' 
+            ]);
+            exit();
+        }
+
+        $formattedData = [
+                "borrow_code" => $borrow->borrow_code,
+                "student" => $borrow->user->first_name . ' ' . $borrow->user->last_name,
+                "student_nisn" => $borrow->user->nisn,
+                "book_title" => $borrow->book->title,
+                "book_isbn" => $borrow->book->isbn,
+                "borrow_date" => $borrow->borrow_date,
+                "due_date" => $borrow->due_date,
+                "return_date" => $borrow->return_date,
+                "status" => $borrow->status 
+            ];
+
+        header('Content-Type: application/json; charset=utf-8');
+        http_response_code(200);
         echo json_encode([
             'code' => 200,
             'success' => true,
@@ -59,6 +95,7 @@ class BorrowController
 
         $user = User::where('nisn', $request['nisn'])->first();
         if(!$user){
+            header('Content-Type: application/json; charset=utf-8');
             http_response_code(404);
             echo json_encode([
                 'code' => 404,
@@ -70,6 +107,7 @@ class BorrowController
 
         $book = Book::where('isbn', $request['isbn'])->first();
         if(!$book){
+            header('Content-Type: application/json; charset=utf-8');
             http_response_code(404);
             echo json_encode([
                 'code' => 404,
@@ -85,6 +123,7 @@ class BorrowController
                                 ->exists();
 
         if ($isAlreadyBorrowed) {
+            header('Content-Type: application/json; charset=utf-8');
             http_response_code(400);
             echo json_encode([
                 'code' => 400,
@@ -105,7 +144,7 @@ class BorrowController
 
         Book::where('id', $book->id)->decrement('stock');
 
-
+        header('Content-Type: application/json; charset=utf-8');
         http_response_code(201);
         echo json_encode([
             'code' => 201,
@@ -121,6 +160,7 @@ class BorrowController
 
         $borrow = Borrow::find($id);
         if(!$borrow){
+            header('Content-Type: application/json; charset=utf-8');
             http_response_code(404);
             echo json_encode([
                 'code' => 404,
@@ -137,6 +177,7 @@ class BorrowController
 
         Book::where('id', $borrow->id_book)->increment('stock');
 
+        header('Content-Type: application/json; charset=utf-8');
         http_response_code(200);
         echo json_encode([
             'code' => 200,
@@ -164,6 +205,7 @@ class BorrowController
 
         $borrow->delete();
 
+        header('Content-Type: application/json; charset=utf-8');
         http_response_code(200);
         echo json_encode([
             'code' => 200,
