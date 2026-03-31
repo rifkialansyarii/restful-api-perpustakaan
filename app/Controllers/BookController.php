@@ -116,35 +116,97 @@ class BookController
 
     }
 
-    // public function update(int $id){
-    //     $json_string = file_get_contents('php://input');
-    //     $request = json_decode($json_string, true);
+    public function update(int $id){
+        $json_string = file_get_contents('php://input');
+        $request = json_decode($json_string, true);
 
-    //     $borrow = Borrow::find($id);
-    //     if(!$borrow){
-    //         http_response_code(404);
-    //         echo json_encode([
-    //             'code' => 404,
-    //             'success' => false,
-    //             'message' => 'Borrow record not found'
-    //         ]);
-    //         exit();
-    //     }
 
-    //     $borrow->update([
-    //         'return_date' => now()->format('Y-m-d'),
-    //         'status' => $request['status']
-    //     ]);
+        $book = Book::find($id);
+        if(!$book){
+            header('Content-Type: application/json; charset=utf-8');
+            http_response_code(404);
+            echo json_encode([
+                'code' => 404,
+                'success' => false,
+                'message' => 'Book record not found'
+            ]);
+            exit();
+        }
 
-    //     Book::where('id', $borrow->id_book)->increment('stock');
+        $allowedData = array_intersect_key($request, array_flip(
+            [
+                'title',
+                'isbn',
+                'stock',
+            ]
+        ));
 
-    //     http_response_code(200);
-    //     echo json_encode([
-    //         'code' => 200,
-    //         'success' => true,
-    //         'message' => 'Book returned successfully'
-    //     ]);
-    // }
+        $book->update($allowedData);
+
+        if(isset($request['authors'])){
+            $authorIds = array_map(function($authorName){
+                $author = Author::where('name', $authorName)->first();
+                if(!$author){
+                    header('Content-Type: application/json; charset=utf-8');
+                    http_response_code(404);
+                    echo json_encode([
+                        'code' => 404,
+                        'success' => false,
+                        'message' => "Author with name '$authorName' not found"
+                    ]);
+                    exit();
+                }
+
+                return $author->id;
+            }, $request['authors']);
+
+            $book->authors()->sync($authorIds);
+        }
+
+        if(isset($request['categories'])){
+            $categoryIds = array_map(function($categoryName){
+                $category = Category::where('category_name', $categoryName)->first();
+                if(!$category){
+                    header('Content-Type: application/json; charset=utf-8');
+                    http_response_code(404);
+                    echo json_encode([
+                        'code' => 404,
+                        'success' => false,
+                        'message' => "Category '$categoryName' not found"
+                    ]);
+                    exit();
+                }
+
+                return $category->id;
+            }, $request['categories']);
+
+            $book->categories()->sync($categoryIds);
+        }
+
+        if(isset($request['publisher_name'])){
+            $publisher = Publisher::where('publisher_name', $request['publisher_name'])->first();
+            if(!$publisher){
+                header('Content-Type: application/json; charset=utf-8');
+                http_response_code(404);
+                echo json_encode([
+                    'code' => 404,
+                    'success' => false,
+                    'message' => 'Publisher not found'
+                ]);
+                exit();
+            }
+
+            $book->update(["publisher_name"=>$publisher]);
+        }
+
+        header('Content-Type: application/json; charset=utf-8');
+        http_response_code(200);
+        echo json_encode([
+            'code' => 200,
+            'success' => true,
+            'message' => 'Book returned successfully'
+        ]);
+    }
 
     // public function destroy(int $id){
     //     $borrow = Borrow::find($id);
