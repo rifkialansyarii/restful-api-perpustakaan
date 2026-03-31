@@ -6,6 +6,19 @@ use App\Models\Author;
 
 class AuthorController
 {
+    private function checkAuthor($author){
+        if(!$author){
+            header('Content-Type: application/json; charset=utf-8');
+            http_response_code(404);
+            echo json_encode([
+                'code' => 404,
+                'success' => false,
+                'message' => 'Author record not found'
+            ]);
+            exit();
+        }
+    }
+
     public function index(){
         $author = Author::all();
 
@@ -42,16 +55,7 @@ class AuthorController
         $request = json_decode($json_string, true);
 
         $author = Author::find($id);
-        if(!$author){
-            header('Content-Type: application/json; charset=utf-8');
-            http_response_code(404);
-            echo json_encode([
-                'code' => 404,
-                'success' => false,
-                'message' => 'Author record not found'
-            ]);
-            exit();
-        }
+        $this->checkAuthor($author);
     
         $author->update(["name" => $request["author_name"]]);
 
@@ -61,6 +65,22 @@ class AuthorController
             'code' => 200,
             'success' => true,
             'message' => 'Author Updated successfully'
+        ]);
+    }
+
+    public function destroy(int $id){
+        $author = Author::find($id);
+        
+        $this->checkAuthor($author);
+
+        $author->delete();
+
+        header('Content-Type: application/json; charset=utf-8');
+        http_response_code(200);
+        echo json_encode([
+            'code' => 200,
+            'success' => true,
+            'message' => 'Book record deleted successfully'
         ]);
     }
 }
