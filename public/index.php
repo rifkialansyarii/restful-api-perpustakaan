@@ -16,4 +16,7 @@ Router::add("POST", "/books", "App\Controllers\BookController", "store");
 Router::add("PATCH", "/books/([0-9]+)", "App\Controllers\BookController", "update");
 Router::add("DELETE", "/books/([0-9]+)", "App\Controllers\BookController", "destroy");
 
+
+Router::add("GET", "/authors", "App\Controllers\AuthorController", "index");
+
 Router::run();
