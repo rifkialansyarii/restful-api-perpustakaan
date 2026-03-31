@@ -30,6 +30,7 @@ Router::add("DELETE", "/categories/([0-9]+)", "App\Controllers\CategoryControlle
 
 
 Router::add("GET", "/users", "App\Controllers\UserController", "index");
+Router::add("GET", "/users/([0-9]+)", "App\Controllers\UserController", "show");
 Router::add("POST", "/users", "App\Controllers\UserController", "store");
 Router::add("PATCH", "/users/([0-9]+)", "App\Controllers\UserController", "update");
 Router::add("DELETE", "/users/([0-9]+)", "App\Controllers\UserController", "destroy");

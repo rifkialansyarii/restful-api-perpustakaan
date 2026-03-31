@@ -50,6 +50,19 @@ class UserController
         ]);
         exit();
     }
+    
+    public function show($id){
+        $user = User::find($id);
+
+        header('Content-Type: application/json; charset=utf-8');
+        http_response_code(200);
+        echo json_encode([
+            'code' => 200,
+            'success' => true,
+            'data' => $user
+        ]);
+        exit();
+    }
 
     public function store(){
         $json_string = file_get_contents('php://input');
