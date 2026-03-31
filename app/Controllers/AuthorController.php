@@ -80,7 +80,7 @@ class AuthorController
         echo json_encode([
             'code' => 200,
             'success' => true,
-            'message' => 'Book record deleted successfully'
+            'message' => 'Author record deleted successfully'
         ]);
     }
 }
