@@ -28,7 +28,9 @@
 
                     foreach($route['middlewares'] as $middleware){
                         $instance = new $middleware();
-                        $instance->before(); 
+                        if(!$instance->before()){
+                            return;
+                        }; 
                     }
 
                     array_shift($variables);
