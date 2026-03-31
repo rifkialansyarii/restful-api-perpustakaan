@@ -15,13 +15,14 @@
         }
 
         public static function run(){
-
+            
             $path = $_SERVER["PATH_INFO"] ?? '/';
             $method = $_SERVER["REQUEST_METHOD"];
 
+
             foreach(self::$routes as $route){
 
-                $pattern = "#^" . $route["path"] . "$#";
+                $pattern = "#^" . "/api" . $route["path"] . "$#";
                 if(preg_match($pattern, $path, $variables) && $route["method"] == $method){
                     $controller = new $route["controller"];
                     $function = $route["function"];
