@@ -2,7 +2,10 @@
 
 namespace App\Controllers;
 
+use App\Models\Author;
 use App\Models\Book;
+use App\Models\Category;
+use App\Models\Publisher;
 
 
 class BookController
@@ -41,86 +44,77 @@ class BookController
         exit();
     }
 
-    // private function generateBorrowCode()
-    // {
-    //     $prefix = 'PJ-';
-    //     $nowDate = now()->format('Ymd');
+    public function store(){
+        $json_string = file_get_contents('php://input');
+        $request = json_decode($json_string, true);
 
-    //     $lastRecord = Borrow::where('borrow_code', 'like', $prefix . $nowDate . '%')
-    //                             ->orderBy('borrow_code', 'desc')
-    //                             ->first();
+        $authorIds = array_map(function($authorName){
+            $author = Author::where('name', $authorName)->first();
+            if(!$author){
+                header('Content-Type: application/json; charset=utf-8');
+                http_response_code(404);
+                echo json_encode([
+                    'code' => 404,
+                    'success' => false,
+                    'message' => "Author with name '$authorName' not found"
+                ]);
+                exit();
+            }
 
-    //     if ($lastRecord) {
-    //         $lastNumber = (int) substr($lastRecord->borrow_code, -3);
-    //         $newNumber = $lastNumber + 1;
-    //     } else {
-    //         $newNumber = 1;
-    //     }
+            return $author->id;
+        }, $request['authors']);
+        
 
-    //     return $prefix . $nowDate . '-' . str_pad($newNumber, 3, '0', STR_PAD_LEFT);
-    // }
+        $categoryIds = array_map(function($categoryName){
+            $category = Category::where('category_name', $categoryName)->first();
+            if(!$category){
+                header('Content-Type: application/json; charset=utf-8');
+                http_response_code(404);
+                echo json_encode([
+                    'code' => 404,
+                    'success' => false,
+                    'message' => "Category '$categoryName' not found"
+                ]);
+                exit();
+            }
 
-    // public function store(){
-    //     $json_string = file_get_contents('php://input');
-    //     $request = json_decode($json_string, true);
+            return $category->id;
+        }, $request['categories']);
 
-    //     $user = User::where('nisn', $request['nisn'])->first();
-    //     if(!$user){
-    //         http_response_code(404);
-    //         echo json_encode([
-    //             'code' => 404,
-    //             'success' => false,
-    //             'message' => 'User not found'
-    //         ]);
-    //         exit();
-    //     }
+        $publisher = Publisher::where('publisher_name', $request['publisher_name'])->first();
+        if(!$publisher){
+            header('Content-Type: application/json; charset=utf-8');
+            http_response_code(404);
+            echo json_encode([
+                'code' => 404,
+                'success' => false,
+                'message' => 'Publisher not found'
+            ]);
+            exit();
+        }
 
-    //     $book = Book::where('isbn', $request['isbn'])->first();
-    //     if(!$book){
-    //         http_response_code(404);
-    //         echo json_encode([
-    //             'code' => 404,
-    //             'success' => false,
-    //             'message' => 'Book not found'
-    //         ]);
-    //         exit();
-    //     }
-
-    //     $isAlreadyBorrowed = Borrow::where('id_user', $user->id)
-    //                             ->where('id_book', $book->id)
-    //                             ->where('status', 'borrowed')
-    //                             ->exists();
-
-    //     if ($isAlreadyBorrowed) {
-    //         http_response_code(400);
-    //         echo json_encode([
-    //             'code' => 400,
-    //             'success' => false,
-    //             'message' => 'Book is already borrowed'
-    //         ]);
-    //         exit();
-    //     }
-
-    //     Borrow::create([
-    //         'borrow_code' => $this->generateBorrowCode(),
-    //         'id_user' => $user->id,
-    //         'id_book' => $book->id,
-    //         'borrow_date' => now()->format('Y-m-d'),
-    //         'due_date' => now()->addDays(7)->format('Y-m-d'),
-    //         'status' => $request['status']
-    //     ]);
-
-    //     Book::where('id', $book->id)->decrement('stock');
+        $book = Book::create([
+            'isbn' => $request['isbn'],
+            'title' => $request['title'],
+            'id_publisher' => $publisher->id,
+            'publication_year' => $request['publication_year'],
+            'stock' => $request['stock']
+        ]);
 
 
-    //     http_response_code(201);
-    //     echo json_encode([
-    //         'code' => 201,
-    //         'success' => true,
-    //         'message' => 'Book borrowed successfully'
-    //     ]);
+        $book->authors()->attach($authorIds);
+        $book->categories()->attach($categoryIds);
 
-    // }
+        header('Content-Type: application/json; charset=utf-8');
+        http_response_code(201);
+        echo json_encode([
+            'code' => 201,
+            'success' => true,
+            'message' => 'Book added successfully'
+        ]);
+        exit();
+
+    }
 
     // public function update(int $id){
     //     $json_string = file_get_contents('php://input');
