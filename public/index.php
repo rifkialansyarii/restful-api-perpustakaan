@@ -29,4 +29,10 @@ Router::add("PATCH", "/categories/([0-9]+)", "App\Controllers\CategoryController
 Router::add("DELETE", "/categories/([0-9]+)", "App\Controllers\CategoryController", "destroy");
 
 
+Router::add("GET", "/users", "App\Controllers\UserController", "index");
+Router::add("POST", "/users", "App\Controllers\UserController", "store");
+Router::add("PATCH", "/users/([0-9]+)", "App\Controllers\UserController", "update");
+Router::add("DELETE", "/users/([0-9]+)", "App\Controllers\UserController", "destroy");
+
+
 Router::run();
