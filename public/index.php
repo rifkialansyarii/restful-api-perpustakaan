@@ -18,6 +18,7 @@ Router::add("DELETE", "/books/([0-9]+)", "App\Controllers\BookController", "dest
 
 
 Router::add("GET", "/authors", "App\Controllers\AuthorController", "index");
+Router::add("GET", "/authors/([0-9]+)", "App\Controllers\AuthorController", "show");
 Router::add("POST", "/authors", "App\Controllers\AuthorController", "store");
 Router::add("PATCH", "/authors/([0-9]+)", "App\Controllers\AuthorController", "update");
 Router::add("DELETE", "/authors/([0-9]+)", "App\Controllers\AuthorController", "destroy");
