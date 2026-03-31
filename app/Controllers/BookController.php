@@ -179,30 +179,28 @@ class BookController
         ]);
     }
 
-    // public function destroy(int $id){
-    //     $borrow = Borrow::find($id);
+    public function destroy(int $id){
+        $book = Book::find($id);
 
-    //     if(!$borrow){
-    //         http_response_code(404);
-    //         echo json_encode([
-    //             'code' => 404,
-    //             'success' => false,
-    //             'message' => 'Borrow record not found'
-    //         ]);
-    //         exit();
-    //     }
+        if(!$book){
+            header('Content-Type: application/json; charset=utf-8');
+            http_response_code(404);
+            echo json_encode([
+                'code' => 404,
+                'success' => false,
+                'message' => 'Book record not found'
+            ]);
+            exit();
+        }
 
-    //     if($borrow->status == 'borrowed' || $borrow->status == 'overdue'){
-    //         Book::where('id', $borrow->id_book)->increment('stock');
-    //     }
+        $book->delete();
 
-    //     $borrow->delete();
-
-    //     http_response_code(200);
-    //     echo json_encode([
-    //         'code' => 200,
-    //         'success' => true,
-    //         'message' => 'Borrow record deleted successfully'
-    //     ]);
-    // }
+        header('Content-Type: application/json; charset=utf-8');
+        http_response_code(200);
+        echo json_encode([
+            'code' => 200,
+            'success' => true,
+            'message' => 'Book record deleted successfully'
+        ]);
+    }
 }
