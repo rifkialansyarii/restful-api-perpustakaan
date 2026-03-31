@@ -97,6 +97,49 @@ class BookController
         exit();
     }
 
+    public function show($id){
+        $book = Book::with(['authors', 'categories', 'publisher'])->find($id);
+
+        if(!$book){
+            header('Content-Type: application/json; charset=utf-8');
+            http_response_code(404);
+            echo json_encode([
+                'code' => 404,
+                'success' => false,
+                'message' => "Book record is not found"
+            ]);
+            exit();
+        }
+
+        $formattedData = [
+            "isbn" => $book?->isbn,
+            "title" => $book?->title,
+            "authors" => $book?->authors?->map(function($author){
+                return [
+                    'author_name' => $author?->name
+                ];
+            }),
+            "categories" => $book?->categories?->map(function($category){
+                return [
+                    'category_name' => $category?->category_name
+                ];
+            }),
+            "publisher" => $book?->publisher?->publisher_name,
+            "publication_year" => $book?->publication_year,
+            "stock" => $book?->stock,
+        ];
+
+        header('Content-Type: application/json; charset=utf-8');
+        http_response_code(200);
+        echo json_encode([
+            'code' => 200,
+            'success' => true,
+            'data' => $formattedData
+        ]);
+        exit();
+    }
+
+
     public function store(){
         $json_string = file_get_contents('php://input');
         $request = json_decode($json_string, true);
