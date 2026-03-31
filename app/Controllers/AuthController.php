@@ -13,16 +13,7 @@ class AuthController
 
         $user = User::where('username', $request['username'])->first();
         
-        if(!$user){
-            header('Content-Type: application/json; charset=utf-8');
-            http_response_code(401);
-            echo json_encode([
-                'code' => 401,
-                'success' => false,
-                'message' => 'Wrong username or password'
-            ]);
-            exit();
-        }else if($user && password_verify($request['password'], $user->password)){
+        if($user && password_verify($request['password'], $user->password)){
             $token = bin2hex(random_bytes(32));
 
             $user->update(["api_token" => $token]);
@@ -34,6 +25,15 @@ class AuthController
                 'success' => true,
                 'message' => 'Login successfully',
                 'api_token' => $token
+            ]);
+            exit();
+        }else{
+            header('Content-Type: application/json; charset=utf-8');
+            http_response_code(401);
+            echo json_encode([
+                'code' => 401,
+                'success' => false,
+                'message' => 'Wrong username or password'
             ]);
             exit();
         }
