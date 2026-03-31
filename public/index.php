@@ -10,4 +10,7 @@ Router::add("POST", "/borrows", "App\Controllers\BorrowController", "store");
 Router::add("PATCH", "/borrows/([0-9]+)", "App\Controllers\BorrowController", "update");
 Router::add("DELETE", "/borrows/([0-9]+)", "App\Controllers\BorrowController", "destroy");
 
+
+Router::add("GET", "/books", "App\Controllers\BookController", "index");
+
 Router::run();
