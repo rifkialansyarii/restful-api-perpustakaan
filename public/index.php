@@ -12,6 +12,7 @@ Router::add("DELETE", "/borrows/([0-9]+)", "App\Controllers\BorrowController", "
 
 
 Router::add("GET", "/books", "App\Controllers\BookController", "index");
+Router::add("GET", "/books/([0-9]+)", "App\Controllers\BookController", "show");
 Router::add("POST", "/books", "App\Controllers\BookController", "store");
 Router::add("PATCH", "/books/([0-9]+)", "App\Controllers\BookController", "update");
 Router::add("DELETE", "/books/([0-9]+)", "App\Controllers\BookController", "destroy");
