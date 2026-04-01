@@ -36,7 +36,7 @@ class AuthMiddleware{
             return false;
         }
 
-        if($user->role !== "admin" || $user->role !== "staff"){
+        if($user->role !== "admin" && $user->role !== "staff"){
             header('Content-Type: application/json; charset=utf-8');
             http_response_code(401);
             echo json_encode([
