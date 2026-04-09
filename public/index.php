@@ -39,6 +39,13 @@ Router::add("PATCH", "/categories/([0-9]+)", "App\Controllers\CategoryController
 Router::add("DELETE", "/categories/([0-9]+)", "App\Controllers\CategoryController", "destroy", [AuthMiddleware::class]);
 
 
+Router::add("GET", "/publishers", "App\Controllers\PublisherController", "index", [AuthMiddleware::class]);
+Router::add("GET", "/publishers/([0-9]+)", "App\Controllers\PublisherController", "show");
+Router::add("POST", "/publishers", "App\Controllers\PublisherController", "store", [AuthMiddleware::class]);
+Router::add("PATCH", "/publishers/([0-9]+)", "App\Controllers\PublisherController", "update", [AuthMiddleware::class]);
+Router::add("DELETE", "/publishers/([0-9]+)", "App\Controllers\PublisherController", "destroy", [AuthMiddleware::class]);
+
+
 Router::add("GET", "/users", "App\Controllers\UserController", "index", [AuthMiddleware::class]);
 Router::add("GET", "/users/([0-9]+)", "App\Controllers\UserController", "show", [AuthMiddleware::class]);
 Router::add("POST", "/users", "App\Controllers\UserController", "store", [AuthMiddleware::class]);
