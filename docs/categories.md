@@ -51,7 +51,7 @@ Response Body Error - not authenticated:
 
 ## Update category API
 
-Endpoint : PUT /localhost/api/categories/(id)
+Endpoint : PATCH /localhost/api/categories/(id)
 
 Headers :
 
