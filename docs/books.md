@@ -57,7 +57,7 @@ Response Body Error:
 
 ## Update book API
 
-Endpoint : PUT /localhost/api/books/(id)
+Endpoint : PATCH /localhost/api/books/(id)
 
 Request Body (set one or more fields):
 

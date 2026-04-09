@@ -33,7 +33,7 @@ Response Body Success:
 
 ## Update author API
 
-Endpoint : PUT /localhost/api/authors/(id)
+Endpoint : PATCH /localhost/api/authors/(id)
 
 Request Body:
 

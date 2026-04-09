@@ -65,7 +65,7 @@ Response Body Error - already borrowed:
 
 ## Update borrow API
 
-Endpoint : PUT /localhost/api/borrows/(id)
+Endpoint : PATCH /localhost/api/borrows/(id)
 
 Request Body:
 
