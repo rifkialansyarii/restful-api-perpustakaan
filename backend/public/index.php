@@ -11,6 +11,15 @@ use Base\Router;
  * You should access all of this route using /api/<endpoint>
  */
 
+header("Access-Control-Allow-Origin: http://localhost:8081"); 
+header("Access-Control-Allow-Methods: GET, POST, OPTIONS, PATCH, DELETE");
+header("Access-Control-Allow-Headers: Content-Type, Accept");
+
+if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
+    http_response_code(200);
+    exit();
+}
+
 Router::add("GET", "/borrows", "App\Controllers\BorrowController", "index");
 Router::add("GET", "/borrows/([0-9]+)", "App\Controllers\BorrowController", "show");
 Router::add("POST", "/borrows", "App\Controllers\BorrowController", "store");
@@ -29,8 +38,6 @@ Router::add("GET", "/authors", "App\Controllers\AuthorController", "index");
 Router::add("GET", "/authors/([0-9]+)", "App\Controllers\AuthorController", "show");
 Router::add("POST", "/authors", "App\Controllers\AuthorController", "store");
 Router::add("PATCH", "/authors/([0-9]+)", "App\Controllers\AuthorController", "update");
-Router::add("OPTIONS", "/authors", "App\Controllers\AuthorController", "store");
-Router::add("OPTIONS", "/authors/([0-9]+)", "App\Controllers\AuthorController", "update");
 Router::add("DELETE", "/authors/([0-9]+)", "App\Controllers\AuthorController", "destroy");
 
 
