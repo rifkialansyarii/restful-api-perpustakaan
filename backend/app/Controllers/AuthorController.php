@@ -33,6 +33,7 @@ class AuthorController
     }
 
     public function show($id){
+
         $author = Author::find($id);
 
         if(!$author){
@@ -57,6 +58,14 @@ class AuthorController
     }
 
     public function store(){
+        header("Access-Control-Allow-Origin: http://localhost:8081");
+        header("Access-Control-Allow-Headers: Content-Type");
+
+        if($_SERVER['REQUEST_METHOD'] == "OPTIONS"){
+            header('HTTP/1.1 200 OK');
+            exit();
+        }
+
         $json_string = file_get_contents('php://input');
         $request = json_decode($json_string, true);
 
@@ -75,6 +84,14 @@ class AuthorController
     }
     
     public function update(int $id){
+        header("Access-Control-Allow-Origin: http://localhost:8081");
+        header("Access-Control-Allow-Headers: Content-Type");
+
+        if($_SERVER['REQUEST_METHOD'] == "OPTIONS"){
+            header('HTTP/1.1 200 OK');
+            exit();
+        }
+
         $json_string = file_get_contents('php://input');
         $request = json_decode($json_string, true);
 
