@@ -20,14 +20,19 @@ class AuthorController
     }
 
     public function index(){
-        $author = Author::all();
+        $authors = Author::get();
 
         header('Content-Type: application/json; charset=utf-8');
         http_response_code(200);
         echo json_encode([
             'code' => 200,
             'success' => true,
-            'data' => $author
+            'data' => $authors->map(function($author){
+                return [
+                    "id" => $author->id,
+                    "author_name" => $author->name
+                ];
+            })
         ]);
         exit();
     }
