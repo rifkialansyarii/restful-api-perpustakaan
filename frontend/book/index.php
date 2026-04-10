@@ -16,7 +16,7 @@
                                         <ul class="breadcrumb">
                                             <li class="breadcrumb-item"><a href="index.php"><i
                                                         class="feather icon-home"></i></a></li>
-                                            <li class="breadcrumb-item"><a href="?page=author">Modul Author</a>
+                                            <li class="breadcrumb-item"><a href="?page=book">Modul Buku</a>
                                             </li>
                                         </ul>
                                     </div>
@@ -32,9 +32,8 @@
                                     <div class="card-header">
                                         <div
                                             style="flex: auto; justify-content: space-between; display: flex; align-items: center;">
-                                            <h5>Data Author</h5>
-                                            <a href="?page=author/tambah" class="btn btn-primary">Tambah
-                                                Author</a>
+                                            <h5>Data Buku</h5>
+                                            <a href="?page=book/store" class="btn btn-primary">Tambah Buku</a>
                                         </div>
 
 
@@ -45,11 +44,17 @@
                                                 <thead>
                                                     <tr>
                                                         <th>#</th>
-                                                        <th>Nama Author</th>
+                                                        <th>ISBN</th>
+                                                        <th>Judul</th>
+                                                        <th>Author</th>
+                                                        <th>Kategori</th>
+                                                        <th>Publisher</th>
+                                                        <th>Tahun Publikasi</th>
+                                                        <th>Stock</th>
                                                         <th>Aksi</th>
                                                     </tr>
                                                 </thead>
-                                                <tbody style="color: white;" id="authors-tbody">
+                                                <tbody style="color: white;" id="books-tbody">
                                                 </tbody>
                                             </table>
                                         </div>
@@ -71,35 +76,52 @@
         </div>
     </div>
     <script>
-        const getAuthors = async () => {
-            const requestGetAuthors = new Request("http://localhost:8080/api/authors");
+        const getBooks = async () => {
+            const requestGetBooks = new Request("http://localhost:8080/api/books");
 
             try {
-                const responseGetAuthors = await fetch(requestGetAuthors);
-                const jsonGetAuthors = await responseGetAuthors.json();
+                const responseGetBooks = await fetch(requestGetBooks);
+                const jsonGetBooks = await responseGetBooks.json();
 
 
-                if (jsonGetAuthors.code === 200 && jsonGetAuthors.success === true) {
-                    const listAuthors = document.getElementById('authors-tbody');
+                if (jsonGetBooks.code === 200 && jsonGetBooks.success === true) {
+                    const listbooks = document.getElementById('books-tbody');
 
                     let index = 0;
-                    jsonGetAuthors.data.forEach(author => {
-                        const row = listAuthors.insertRow(index);
+                    jsonGetBooks.data.forEach(book => {
+                        const row = listbooks.insertRow(index);
                         
                         const cellId = row.insertCell(0);
-                        const cellName = row.insertCell(1);
-                        const cellAction = row.insertCell(2);
+                        const cellIsbn = row.insertCell(1);
+                        const cellTitle = row.insertCell(2);
+                        const cellAuthor = row.insertCell(3);
+                        const cellCategory = row.insertCell(4);
+                        const cellPublisher = row.insertCell(5);
+                        const cellPublicationYear = row.insertCell(6);
+                        const cellStock = row.insertCell(7);
+                        const cellAction = row.insertCell(8);
 
                         cellId.appendChild(document.createTextNode(index + 1));
-                        cellName.appendChild(document.createTextNode(author.author_name));
+                        cellIsbn.appendChild(document.createTextNode(book.isbn));
+                        cellTitle.appendChild(document.createTextNode(book.title));
+
+                        const authors = book.authors.map(author => author.author_name).join(", ");
+                        cellAuthor.appendChild(document.createTextNode(authors));
+                        
+                        const categories = book.categories.map(category => category.category_name).join(", ");
+                        cellCategory.appendChild(document.createTextNode(categories));
+
+                        cellPublisher.appendChild(document.createTextNode(book.publisher));
+                        cellPublicationYear.appendChild(document.createTextNode(book.publication_year));
+                        cellStock.appendChild(document.createTextNode(book.stock));
 
                         const linkEditActionEl = document.createElement("a");
                         const linkDeleteActionEl = document.createElement("a");
 
-                        linkEditActionEl.setAttribute("href", `?page=author/update&id=${author.id}`);
+                        linkEditActionEl.setAttribute("href", `?page=book/update&id=${book.id}`);
                         linkEditActionEl.setAttribute("class", "btn btn-sm btn-warning");
 
-                        linkDeleteActionEl.setAttribute("href", `?page=author/destroy&id=${author.id}`);
+                        linkDeleteActionEl.setAttribute("href", `?page=book/destroy&id=${book.id}`);
                         linkDeleteActionEl.setAttribute("class", "btn btn-sm btn-danger");
                         linkDeleteActionEl.setAttribute("onclick", "return confirm('Yakin ingin menghapus?')");
 
@@ -114,11 +136,11 @@
 
                 }
             } catch (error) {
-                console.error("Error to get Data Authors: " . error);
+                console.error("Error to get Data books: " . error);
             }
         }
 
-        getAuthors();
+        getBooks();
     </script>
 </div>
 <!-- [ Main Content ] end -->

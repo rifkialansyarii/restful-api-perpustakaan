@@ -151,7 +151,7 @@ class BookController
         $book = Book::create([
             'isbn' => $request['isbn'],
             'title' => $request['title'],
-            'id_publisher' => $publisher->id,
+            'id_publisher' => $publisher,
             'publication_year' => $request['publication_year'],
             'stock' => $request['stock']
         ]);
