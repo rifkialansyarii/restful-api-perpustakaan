@@ -16,8 +16,8 @@
                                         <ul class="breadcrumb">
                                             <li class="breadcrumb-item"><a href="index.php"><i
                                                         class="feather icon-home"></i></a></li>
-                                            <li class="breadcrumb-item"><a href="?page=book">Book Modul</a></li>
-                                            <li class="breadcrumb-item"><a href="?page=book/update">Update Buku</a></li>
+                                            <li class="breadcrumb-item"><a href="?page=book">book Modul</a>
+                                            </li>
                                         </ul>
                                     </div>
                                 </div>
@@ -31,7 +31,7 @@
 
                                 <div class="card">
                                     <div class="card-header">
-                                        <h5>Update Buku</h5>
+                                        <h5>Buku Form</h5>
                                     </div>
                                     <div class="card-body">
                                         <div class="row">
@@ -96,27 +96,13 @@
                                                 </form>
 
                                                 <script>
-                                                    const urlParams = new URLSearchParams(window.location.search);
-                                                    const bookId = urlParams.get('id');
                                                     let authorOptionsHTML = '';
                                                     let categoryOptionsHTML = '';
-                                                    let authorCount = 1;
-                                                    let categoryCount = 1;
 
                                                     async function fetchMasterData() {
                                                         try {
-                                                            const [pubRes, authRes, catRes] = await Promise.all([
-                                                                fetch("http://localhost:8080/api/publishers"),
-                                                                fetch("http://localhost:8080/api/authors"),
-                                                                fetch("http://localhost:8080/api/categories"),
-                                                            ]);
-
-                                                            const [pubJson, authJson, catJson] = await Promise.all([
-                                                                pubRes.json(),
-                                                                authRes.json(),
-                                                                catRes.json(),
-                                                            ]);
-
+                                                            const pubRes = await fetch("http://localhost:8080/api/publishers");
+                                                            const pubJson = await pubRes.json();
                                                             const publisherSelect = document.getElementById('publisher');
                                                             if (pubJson.success) {
                                                                 pubJson.data.forEach(pub => {
@@ -124,6 +110,8 @@
                                                                 });
                                                             }
 
+                                                            const authRes = await fetch("http://localhost:8080/api/authors");
+                                                            const authJson = await authRes.json();
                                                             const authorSelect1 = document.getElementById('authors-1');
                                                             if (authJson.success) {
                                                                 authJson.data.forEach(auth => {
@@ -133,6 +121,8 @@
                                                                 });
                                                             }
 
+                                                            const catRes = await fetch("http://localhost:8080/api/categories");
+                                                            const catJson = await catRes.json();
                                                             const categorySelect1 = document.getElementById('kategoris-1');
                                                             if (catJson.success) {
                                                                 catJson.data.forEach(cat => {
@@ -146,168 +136,96 @@
                                                         }
                                                     }
 
-                                                    function createInputField(inputName, count) {
-                                                        const labelText = `${inputName.charAt(0).toUpperCase() + inputName.slice(1)} ${count}`;
-                                                        const selectId = `${inputName}s-${count}`;
-                                                        const optionsHTML = inputName === 'author' ? authorOptionsHTML : categoryOptionsHTML;
-
-                                                        return `
-                                                            <div class="${inputName}-item mt-3">
-                                                                <label class="form-label" for="${selectId}">${labelText}</label>
-                                                                <div class="d-flex gap-2">
-                                                                    <select class="form-control" id="${selectId}" name="${inputName}[]" required>
-                                                                        <option value="">-- Pilih ${inputName.charAt(0).toUpperCase() + inputName.slice(1)} --</option>
-                                                                        ${optionsHTML}
-                                                                    </select>
-                                                                    <button type="button" class="btn btn-danger btn-hapus">X</button>
-                                                                </div>
-                                                            </div>
-                                                        `;
-                                                    }
 
                                                     function addAndDestroyInputHandler(inputName) {
                                                         const buttonAddInput = document.getElementById(`tambah-${inputName}`);
                                                         const form = document.getElementById(`form-${inputName}`);
 
+                                                        let count = 1;
+
+                                                        let newInputForm;
+
                                                         buttonAddInput.addEventListener('click', () => {
+                                                            count++;
+
                                                             if (inputName === 'author') {
-                                                                authorCount++;
-                                                                form.insertAdjacentHTML('beforeend', createInputField(inputName, authorCount));
-                                                            } else {
-                                                                categoryCount++;
-                                                                form.insertAdjacentHTML('beforeend', createInputField(inputName, categoryCount));
+                                                                newInputForm = `
+                                                                    <div class="${inputName}-item mt-3">
+                                                                        <label class="form-label" for="${inputName}s-${count}">${inputName.charAt(0).toUpperCase() + inputName.slice(1)} ${count}</label>
+                                                                        <div class="d-flex gap-2">
+                                                                            <select class="form-control" id="${inputName}s-${count}" name="${inputName}[]" required>
+                                                                                <option value="">-- Pilih ${inputName.charAt(0).toUpperCase() + inputName.slice(1)} --</option>
+                                                                                ${authorOptionsHTML}
+                                                                            </select>
+                                                                            <button type="button" class="btn btn-danger btn-hapus">X</button>
+                                                                        </div>
+                                                                    </div>
+                                                                `;
+                                                            } else if (inputName === 'kategori') {
+                                                                newInputForm = `
+                                                                    <div class="${inputName}-item mt-3">
+                                                                        <label class="form-label" for="${inputName}s-${count}">${inputName.charAt(0).toUpperCase() + inputName.slice(1)} ${count}</label>
+                                                                        <div class="d-flex gap-2">
+                                                                            <select class="form-control" id="${inputName}s-${count}" name="${inputName}[]" required>
+                                                                                <option value="">-- Pilih ${inputName.charAt(0).toUpperCase() + inputName.slice(1)} --</option>
+                                                                                ${categoryOptionsHTML}
+                                                                            </select>
+                                                                            <button type="button" class="btn btn-danger btn-hapus">X</button>
+                                                                        </div>
+                                                                    </div>
+                                                                `;
                                                             }
-                                                        });
+
+                                                            form.insertAdjacentHTML('beforeend', newInputForm);
+
+                                                        })
+
 
                                                         form.addEventListener('click', (event) => {
+
                                                             if (event.target.matches('.btn-hapus')) {
-                                                                if (inputName === 'author' && authorCount > 1) {
-                                                                    authorCount--;
-                                                                }
-                                                                if (inputName === 'kategori' && categoryCount > 1) {
-                                                                    categoryCount--;
-                                                                }
+                                                                count--;
 
                                                                 event.target.closest(`.${inputName}-item`).remove();
                                                                 const allInput = document.querySelectorAll(`.${inputName}-item`);
+
+
                                                                 allInput.forEach((element, index) => {
                                                                     const newNumber = index + 1;
+
+
                                                                     const labelSelector = element.querySelector('.form-label');
                                                                     const inputSelector = element.querySelector('.form-control');
+
                                                                     labelSelector.textContent = `${inputName.charAt(0).toUpperCase() + inputName.slice(1)} ${newNumber}`;
                                                                     labelSelector.setAttribute('for', `${inputName}s-${newNumber}`);
+
                                                                     inputSelector.id = `${inputName}s-${newNumber}`;
                                                                 });
+
+
                                                             }
+
+
                                                         });
                                                     }
 
-                                                    function renderAuthorInputs(authors) {
-                                                        const form = document.getElementById('form-author');
-                                                        form.innerHTML = '';
-                                                        authorCount = Math.max(authors.length, 1);
-                                                        authors.forEach((author, index) => {
-                                                            const number = index + 1;
-                                                            const html = `
-                                                                <div class="author-item${index > 0 ? ' mt-3' : ''}">
-                                                                    <label class="form-label" for="authors-${number}">Author ${number}</label>
-                                                                    <div class="d-flex gap-2">
-                                                                        <select class="form-control" id="authors-${number}" name="author[]" required>
-                                                                            <option value="">-- Pilih Author --</option>
-                                                                            ${authorOptionsHTML}
-                                                                        </select>
-                                                                        ${number > 1 ? '<button type="button" class="btn btn-danger btn-hapus">X</button>' : ''}
-                                                                    </div>
-                                                                </div>
-                                                            `;
-                                                            form.insertAdjacentHTML('beforeend', html);
-                                                        });
 
-                                                        if (authors.length === 0) {
-                                                            form.insertAdjacentHTML('beforeend', createInputField('author', 1));
-                                                        }
 
-                                                        authors.forEach((author, index) => {
-                                                            const selectEl = document.getElementById(`authors-${index + 1}`);
-                                                            if (selectEl) {
-                                                                selectEl.value = author.author_name;
-                                                            }
-                                                        });
-                                                    }
 
-                                                    function renderCategoryInputs(categories) {
-                                                        const form = document.getElementById('form-kategori');
-                                                        form.innerHTML = '';
-                                                        categoryCount = Math.max(categories.length, 1);
-                                                        categories.forEach((category, index) => {
-                                                            const number = index + 1;
-                                                            const html = `
-                                                                <div class="kategori-item${index > 0 ? ' mt-3' : ''}">
-                                                                    <label class="form-label" for="kategoris-${number}">Kategori ${number}</label>
-                                                                    <div class="d-flex gap-2">
-                                                                        <select class="form-control" id="kategoris-${number}" name="kategori[]" required>
-                                                                            <option value="">-- Pilih Kategori --</option>
-                                                                            ${categoryOptionsHTML}
-                                                                        </select>
-                                                                        ${number > 1 ? '<button type="button" class="btn btn-danger btn-hapus">X</button>' : ''}
-                                                                    </div>
-                                                                </div>
-                                                            `;
-                                                            form.insertAdjacentHTML('beforeend', html);
-                                                        });
-
-                                                        if (categories.length === 0) {
-                                                            form.insertAdjacentHTML('beforeend', createInputField('kategori', 1));
-                                                        }
-
-                                                        categories.forEach((category, index) => {
-                                                            const selectEl = document.getElementById(`kategoris-${index + 1}`);
-                                                            if (selectEl) {
-                                                                selectEl.value = category.category_name;
-                                                            }
-                                                        });
-                                                    }
-
-                                                    async function getDetailBook() {
-                                                        if (!bookId) {
-                                                            console.error('Book ID tidak ditemukan di URL.');
-                                                            return;
-                                                        }
-
-                                                        const requestDetailBook = new Request(`http://localhost:8080/api/books/${bookId}`);
-                                                        try {
-                                                            const responseGetDetailBook = await fetch(requestDetailBook);
-                                                            const jsonDetailBook = await responseGetDetailBook.json();
-
-                                                            if (jsonDetailBook.code === 200 && jsonDetailBook.success === true) {
-                                                                document.getElementById('isbn').value = jsonDetailBook.data.isbn;
-                                                                document.getElementById('title').value = jsonDetailBook.data.title;
-                                                                document.getElementById('publisher').value = jsonDetailBook.data.publisher;
-                                                                document.getElementById('publication_year').value = jsonDetailBook.data.publication_year;
-                                                                document.getElementById('stock').value = jsonDetailBook.data.stock;
-
-                                                                renderAuthorInputs(jsonDetailBook.data.authors || [{ author_name: '' }]);
-                                                                renderCategoryInputs(jsonDetailBook.data.categories || [{ category_name: '' }]);
-                                                            }
-                                                        } catch (error) {
-                                                            console.error('Error get detail book: ' + error);
-                                                        }
-                                                    }
 
                                                     function validateForm(...arrayInput) {
-                                                        let isValid = true;
+
                                                         arrayInput.forEach(item => {
                                                             if (!item) {
-                                                                isValid = false;
+                                                                alert('Semua field harus diisi');
+                                                                return false;
                                                             }
                                                         });
-                                                        if (!isValid) {
-                                                            alert('Semua field harus diisi');
-                                                        }
-                                                        return isValid;
+
                                                     }
 
-                                                    async function sendUpdateBook() {
+                                                    async function sendCreatebook() {
                                                         const bookIsbn = document.getElementById('isbn').value.trim();
                                                         const bookTitle = document.getElementById('title').value.trim();
                                                         const bookPublisher = document.getElementById('publisher').value.trim();
@@ -331,12 +249,10 @@
                                                         const bookPublicationYear = document.getElementById('publication_year').value.trim();
                                                         const bookStock = document.getElementById('stock').value.trim();
 
-                                                        if (!validateForm(bookIsbn, bookTitle, bookPublisher, bookPublicationYear, bookStock)) {
-                                                            return;
-                                                        }
+                                                        validateForm([bookIsbn, bookTitle, bookPublisher, bookPublicationYear, bookStock]);
 
-                                                        const request = new Request(`http://localhost:8080/api/books/${bookId}`, {
-                                                            method: "PATCH",
+                                                        const request = new Request("http://localhost:8080/api/books", {
+                                                            method: "POST",
                                                             headers: {
                                                                 "Content-Type": "application/json",
                                                                 "Accept": "application/json",
@@ -348,31 +264,30 @@
                                                                 "authors": bookAuthors,
                                                                 "categories": bookCategories,
                                                                 "publication_year": bookPublicationYear,
-                                                                "stock": parseInt(bookStock, 10),
+                                                                "stock": parseInt(bookStock),
                                                             })
                                                         });
+
 
                                                         try {
                                                             const response = await fetch(request);
                                                             const json = await response.json();
-                                                            if (json.code === 200 && json.success === true) {
-                                                                alert("Berhasil Mengupdate Buku");
+                                                            if (json.code === 201 && json.success === true) {
+                                                                alert("Berhasil Menambahkan Buku");
                                                             }
                                                         } catch (error) {
                                                             console.error("Error fetch: " + error);
                                                         }
+
                                                     }
 
-                                                    (async function init() {
-                                                        await fetchMasterData();
-                                                        await getDetailBook();
-                                                        addAndDestroyInputHandler('author');
-                                                        addAndDestroyInputHandler('kategori');
-                                                    })();
+                                                    fetchMasterData();
+                                                    addAndDestroyInputHandler("author");
+                                                    addAndDestroyInputHandler("kategori");
 
                                                     document.forms['bookForm'].onsubmit = (event) => {
+                                                        sendCreatebook();
                                                         event.preventDefault();
-                                                        sendUpdateBook();
                                                     }
                                                 </script>
                                             </div>
