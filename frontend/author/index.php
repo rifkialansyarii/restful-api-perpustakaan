@@ -33,7 +33,7 @@
                                         <div
                                             style="flex: auto; justify-content: space-between; display: flex; align-items: center;">
                                             <h5>Data Author</h5>
-                                            <a href="?page=author/tambah" class="btn btn-primary">Tambah
+                                            <a href="?page=author/store" class="btn btn-primary">Tambah
                                                 Author</a>
                                         </div>
 
@@ -75,17 +75,14 @@
             const requestGetAuthors = new Request("http://localhost:8080/api/authors");
 
             try {
-                const responseGetAuthors = await fetch(requestGetAuthors);
-                const jsonGetAuthors = await responseGetAuthors.json();
+                const authors = await fetch(requestGetAuthors).then(res => res.json());
 
-
-                if (jsonGetAuthors.code === 200 && jsonGetAuthors.success === true) {
+                if (authors.code === 200 && authors.success === true) {
                     const listAuthors = document.getElementById('authors-tbody');
 
                     let index = 0;
-                    jsonGetAuthors.data.forEach(author => {
+                    authors.data.forEach(author => {
                         const row = listAuthors.insertRow(index);
-                        
                         const cellId = row.insertCell(0);
                         const cellName = row.insertCell(1);
                         const cellAction = row.insertCell(2);
