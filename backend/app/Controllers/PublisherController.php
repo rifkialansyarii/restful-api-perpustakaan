@@ -29,6 +29,7 @@ class PublisherController
             'success' => true,
             'data' => $publishers?->map(function($publisher){
                 return [
+                    'id' => $publisher->id,
                     'publisher_name' => $publisher->publisher_name,
                     'address' => $publisher->address,
                 ];
