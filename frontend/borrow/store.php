@@ -86,10 +86,6 @@
                                                         </select>
                                                     </div>`)
                                                         });
-
-
-
-
                                                     }
 
                                                     function validateForm(...arrayInput) {
@@ -138,7 +134,6 @@
                                                         }
                                                     }
 
-                                                    // Inisialisasi data saat halaman dimuat
                                                     fetchDataMaster();
 
                                                     document.forms['borrowForm'].onsubmit = (event) => {

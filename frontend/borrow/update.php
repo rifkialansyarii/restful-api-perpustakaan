@@ -94,7 +94,6 @@
                                                                 statusSelect.innerHTML = `
                                                                     <option value="">-- Pilih Status --</option>
                                                                     <option value="borrowed" ${currentStatus === 'borrowed' ? 'selected' : ''}>Borrowed</option>
-                                                                    <option value="canceled" ${currentStatus === 'canceled' ? 'selected' : ''}>Canceled</option>
                                                                     <option value="overdue"  ${currentStatus === 'overdue' ? 'selected' : ''}>Overdue</option>
                                                                     <option value="returned"  ${currentStatus === 'returned' ? 'selected' : ''}>Returned</option>
                                                                 `;
@@ -127,7 +126,6 @@
                                                             return;
                                                         }
 
-                                                        console.info(siswaEl);
                                                         const request = new Request(`http://localhost:8080/api/borrows/${borrowCode}`, {
                                                             method: "PATCH",
                                                             headers: {
@@ -154,7 +152,6 @@
                                                         }
                                                     }
 
-                                                    // Inisialisasi data saat halaman dimuat
                                                     loadBorrowData();
 
                                                     document.forms['borrowForm'].onsubmit = (event) => {
