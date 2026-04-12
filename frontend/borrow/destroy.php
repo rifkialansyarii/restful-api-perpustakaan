@@ -1,21 +1,21 @@
 <script>
     const urlSearchParams = new URLSearchParams(window.location.search);
-    const bookId = urlSearchParams.get("id");
+    const borrowCode = urlSearchParams.get("id");
 
-    const destroybook = async () => {
-        const requestDestroyBook = new Request(`http://localhost:8080/api/books/${bookId}`,{
+    const destroyBorrow = async () => {
+        const requestDestroyBorrow = new Request(`http://localhost:8080/api/borrows/${borrowCode}`,{
             method: "DELETE",
             headers:  {"Accept": "application/json"},
         });
         
-        const responseDestroyBook = await fetch(requestDestroyBook);
-        const jsonResponseDestroyBook = await responseDestroyBook.json();
+        const responseDestroyBorrow = await fetch(requestDestroyBorrow);
+        const jsonResponseDestroyBorrow = await responseDestroyBorrow.json();
 
-        if(jsonResponseDestroyBook.code === 200 && jsonResponseDestroyBook.success === true){
+        if(jsonResponseDestroyBorrow.code === 200 && jsonResponseDestroyBorrow.success === true){
             alert("book berhasil dihapus");
-            window.location.href = "http://localhost:8081/?page=book/index"
+            window.location.href = "http://localhost:8081/?page=borrow/index"
         }
     }
 
-    destroybook();
+    destroyBorrow();
 </script>

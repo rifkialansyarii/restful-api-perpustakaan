@@ -16,8 +16,8 @@
                                         <ul class="breadcrumb">
                                             <li class="breadcrumb-item"><a href="index.php"><i
                                                         class="feather icon-home"></i></a></li>
-                                            <li class="breadcrumb-item"><a href="?page=book">Book Modul</a></li>
-                                            <li class="breadcrumb-item"><a href="?page=book/update">Update Buku</a></li>
+                                            <li class="breadcrumb-item"><a href="?page=borrow">Modul Peminjaman</a></li>
+                                            <li class="breadcrumb-item"><a href="?page=borrow/update">Update Data Peminjaman</a></li>
                                         </ul>
                                     </div>
                                 </div>
@@ -31,7 +31,7 @@
 
                                 <div class="card">
                                     <div class="card-header">
-                                        <h5>Update Buku</h5>
+                                        <h5>Update Data Peminjaman</h5>
                                     </div>
                                     <div class="card-body">
                                         <div class="row">
@@ -96,6 +96,7 @@
                                                                     <option value="borrowed" ${currentStatus === 'borrowed' ? 'selected' : ''}>Borrowed</option>
                                                                     <option value="canceled" ${currentStatus === 'canceled' ? 'selected' : ''}>Canceled</option>
                                                                     <option value="overdue"  ${currentStatus === 'overdue' ? 'selected' : ''}>Overdue</option>
+                                                                    <option value="returned"  ${currentStatus === 'returned' ? 'selected' : ''}>Returned</option>
                                                                 `;
 
                                                             }

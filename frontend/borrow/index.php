@@ -16,7 +16,7 @@
                                         <ul class="breadcrumb">
                                             <li class="breadcrumb-item"><a href="index.php"><i
                                                         class="feather icon-home"></i></a></li>
-                                            <li class="breadcrumb-item"><a href="?page=book">Modul Buku</a>
+                                            <li class="breadcrumb-item"><a href="?page=borrow">Modul Peminjaman</a>
                                             </li>
                                         </ul>
                                     </div>
@@ -32,8 +32,8 @@
                                     <div class="card-header">
                                         <div
                                             style="flex: auto; justify-content: space-between; display: flex; align-items: center;">
-                                            <h5>Data Buku</h5>
-                                            <a href="?page=book/store" class="btn btn-primary">Tambah Buku</a>
+                                            <h5>Data Peminjaman</h5>
+                                            <a href="?page=borrow/store" class="btn btn-primary">Tambah Data Peminjaman</a>
                                         </div>
 
 

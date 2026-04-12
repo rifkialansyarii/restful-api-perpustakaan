@@ -24,7 +24,7 @@ Router::add("GET", "/borrows", "App\Controllers\BorrowController", "index");
 Router::add("GET", "/borrows/([A-Za-z0-9\-]+)", "App\Controllers\BorrowController", "show");
 Router::add("POST", "/borrows", "App\Controllers\BorrowController", "store");
 Router::add("PATCH", "/borrows/([A-Za-z0-9\-]+)", "App\Controllers\BorrowController", "update");
-Router::add("DELETE", "/borrows/([0-9]+)", "App\Controllers\BorrowController", "destroy");
+Router::add("DELETE", "/borrows/([A-Za-z0-9\-]+)", "App\Controllers\BorrowController", "destroy");
 
 
 Router::add("GET", "/books", "App\Controllers\BookController", "index");
