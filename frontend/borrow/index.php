@@ -80,15 +80,13 @@
             const requestGetBorrows = new Request("http://localhost:8080/api/borrows");
 
             try {
-                const responseGetBorrows = await fetch(requestGetBorrows);
-                const jsonGetBorrows = await responseGetBorrows.json();
+                const borrows = await fetch(requestGetBorrows).then(res => res.json());
 
-
-                if (jsonGetBorrows.code === 200 && jsonGetBorrows.success === true) {
+                if (borrows.code === 200 && borrows.success === true) {
                     const listbooks = document.getElementById('borrows-tbody');
 
                     let index = 0;
-                    jsonGetBorrows.data.forEach(borrow => {
+                    borrows.data.forEach(borrow => {
                         const row = listbooks.insertRow(index);
                         
                         const cellId = row.insertCell(0);
