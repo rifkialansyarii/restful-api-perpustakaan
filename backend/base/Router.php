@@ -1,5 +1,7 @@
 <?php
     namespace Base;
+    use Dotenv\Dotenv;
+
 
     class Router{
         private static array $routes = array();

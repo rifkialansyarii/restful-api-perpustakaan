@@ -9,10 +9,13 @@ use function Illuminate\Support\now;
 
 class BorrowController
 {
-    public function index(){
+    public function index()
+    {
         $borrows = Borrow::with(['user', 'book'])->get();
 
-        $formattedData = $borrows->map(function($borrow) {
+
+
+        $formattedData = $borrows->map(function ($borrow) {
             return [
                 "borrow_code" => $borrow->borrow_code,
                 "student" => $borrow->user->first_name . ' ' . $borrow->user->last_name,
@@ -22,7 +25,7 @@ class BorrowController
                 "borrow_date" => $borrow->borrow_date,
                 "due_date" => $borrow->due_date,
                 "return_date" => $borrow->return_date,
-                "status" => $borrow->status 
+                "status" => $borrow->status,
             ];
         });
 
@@ -35,31 +38,32 @@ class BorrowController
         ]);
     }
 
-    public function show($id){
-        $borrow = Borrow::with(['user', 'book'])->find($id);
+    public function show($borrowCode)
+    {
+        $borrow = Borrow::with(['user', 'book'])->where("borrow_code", $borrowCode)->first();
 
-        if(!$borrow){
+        if (!$borrow) {
             header('Content-Type: application/json; charset=utf-8');
             http_response_code(404);
             echo json_encode([
                 'code' => 404,
                 'success' => false,
-                'message' => 'Borrow record is not found' 
+                'message' => 'Borrow record is not found'
             ]);
             exit();
         }
 
         $formattedData = [
-                "borrow_code" => $borrow->borrow_code,
-                "student" => $borrow->user->first_name . ' ' . $borrow->user->last_name,
-                "student_nisn" => $borrow->user->nisn,
-                "book_title" => $borrow->book->title,
-                "book_isbn" => $borrow->book->isbn,
-                "borrow_date" => $borrow->borrow_date,
-                "due_date" => $borrow->due_date,
-                "return_date" => $borrow->return_date,
-                "status" => $borrow->status 
-            ];
+            "borrow_code" => $borrow->borrow_code,
+            "student" => $borrow->user->first_name . ' ' . $borrow->user->last_name,
+            "student_nisn" => $borrow->user->nisn,
+            "book_title" => $borrow->book->title,
+            "book_isbn" => $borrow->book->isbn,
+            "borrow_date" => $borrow->borrow_date,
+            "due_date" => $borrow->due_date,
+            "return_date" => $borrow->return_date,
+            "status" => $borrow->status
+        ];
 
         header('Content-Type: application/json; charset=utf-8');
         http_response_code(200);
@@ -75,9 +79,9 @@ class BorrowController
         $prefix = 'PJ-';
         $nowDate = now()->format('Ymd');
 
-        $lastRecord = Borrow::where('borrow_code', 'like', $prefix . $nowDate . '%')
-                                ->orderBy('borrow_code', 'desc')
-                                ->first();
+        $lastRecord = Borrow::withTrashed()->where('borrow_code', 'like', $prefix . $nowDate . '%')
+            ->orderBy('borrow_code', 'desc')
+            ->first();
 
         if ($lastRecord) {
             $lastNumber = (int) substr($lastRecord->borrow_code, -3);
@@ -89,12 +93,18 @@ class BorrowController
         return $prefix . $nowDate . '-' . str_pad($newNumber, 3, '0', STR_PAD_LEFT);
     }
 
-    public function store(){
+    public function store()
+    {
         $json_string = file_get_contents('php://input');
         $request = json_decode($json_string, true);
 
-        $user = User::where('nisn', $request['nisn'])->first();
-        if(!$user){
+        $userReq = $request['user'];
+        $pos = strpos($userReq, "- ");
+        $userNisn = substr($userReq, $pos + 2);
+
+        $user = User::where('nisn', $userNisn)->first();
+
+        if (!$user) {
             header('Content-Type: application/json; charset=utf-8');
             http_response_code(404);
             echo json_encode([
@@ -105,8 +115,14 @@ class BorrowController
             exit();
         }
 
-        $book = Book::where('isbn', $request['isbn'])->first();
-        if(!$book){
+
+        $bookReq = $request['book'];
+        $pos = strpos($bookReq, "- ");
+        $bookIsbn = substr($bookReq, $pos + 2);
+
+        $book = Book::where('isbn', $bookIsbn)->first();
+        
+        if (!$book) {
             header('Content-Type: application/json; charset=utf-8');
             http_response_code(404);
             echo json_encode([
@@ -118,9 +134,9 @@ class BorrowController
         }
 
         $isAlreadyBorrowed = Borrow::where('id_user', $user->id)
-                                ->where('id_book', $book->id)
-                                ->where('status', 'borrowed')
-                                ->exists();
+            ->where('id_book', $book->id)
+            ->where('status', 'borrowed')
+            ->exists();
 
         if ($isAlreadyBorrowed) {
             header('Content-Type: application/json; charset=utf-8');
@@ -139,7 +155,7 @@ class BorrowController
             'id_book' => $book->id,
             'borrow_date' => now()->format('Y-m-d'),
             'due_date' => now()->addDays(7)->format('Y-m-d'),
-            'status' => $request['status']
+            'status' => "borrowed"
         ]);
 
         Book::where('id', $book->id)->decrement('stock');
@@ -154,12 +170,13 @@ class BorrowController
 
     }
 
-    public function update(int $id){
+    public function update(string $borrowCode)
+    {
         $json_string = file_get_contents('php://input');
         $request = json_decode($json_string, true);
 
-        $borrow = Borrow::find($id);
-        if(!$borrow){
+        $borrow = Borrow::with(['user', 'book'])->where("borrow_code", $borrowCode)->first();
+        if (!$borrow) {
             header('Content-Type: application/json; charset=utf-8');
             http_response_code(404);
             echo json_encode([
@@ -169,8 +186,22 @@ class BorrowController
             ]);
             exit();
         }
+        $userReq = $request['user'];
+        $pos = strpos($userReq, "- ");
+        $userNisn = substr($userReq, $pos + 2);
+
+        $user = User::where('nisn', $userNisn)->first();
+
+        $bookReq = $request['book'];
+        $pos = strpos($bookReq, "- ");
+        $bookIsbn = substr($bookReq, $pos + 2);
+
+        $book = Book::where('isbn', $bookIsbn)->first();
+
 
         $borrow->update([
+            'id_user' => $user->id,
+            'id_book' => $book->id,
             'return_date' => now()->format('Y-m-d'),
             'status' => $request['status']
         ]);
@@ -186,10 +217,11 @@ class BorrowController
         ]);
     }
 
-    public function destroy(int $id){
-        $borrow = Borrow::find($id);
+    public function destroy(string $borrowCode)
+    {
+        $borrow = Borrow::where("borrow_code", $borrowCode)->first();
 
-        if(!$borrow){
+        if (!$borrow) {
             http_response_code(404);
             echo json_encode([
                 'code' => 404,
@@ -199,7 +231,7 @@ class BorrowController
             exit();
         }
 
-        if($borrow->status == 'borrowed' || $borrow->status == 'overdue'){
+        if ($borrow->status == 'borrowed' || $borrow->status == 'overdue') {
             Book::where('id', $borrow->id_book)->increment('stock');
         }
 

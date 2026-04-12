@@ -20,19 +20,30 @@ class AuthorController
     }
 
     public function index(){
-        $author = Author::all();
+        $authors = Author::get();
 
         header('Content-Type: application/json; charset=utf-8');
         http_response_code(200);
         echo json_encode([
             'code' => 200,
             'success' => true,
-            'data' => $author
+            'data' => $authors->map(function($author){
+                return [
+                    "id" => $author->id,
+                    "author_name" => $author->name
+                ];
+            })
         ]);
         exit();
     }
 
     public function show($id){
+
+        if($_SERVER['REQUEST_METHOD'] == "OPTIONS"){
+            http_response_code(200);
+            exit();
+        }
+
         $author = Author::find($id);
 
         if(!$author){
@@ -51,12 +62,20 @@ class AuthorController
         echo json_encode([
             'code' => 200,
             'success' => true,
-            'data' => $author
+            'data' => [
+                "author_name" => $author->name
+            ]
         ]);
         exit();
     }
 
     public function store(){
+
+        if($_SERVER['REQUEST_METHOD'] == "OPTIONS"){
+            http_response_code(200);
+            exit();
+        }
+
         $json_string = file_get_contents('php://input');
         $request = json_decode($json_string, true);
 
@@ -75,6 +94,15 @@ class AuthorController
     }
     
     public function update(int $id){
+        header("Access-Control-Allow-Origin: http://localhost:8081");
+        header("Access-Control-Allow-Methods: OPTIONS,PATCH");
+        header("Access-Control-Allow-Headers: Content-Type");
+
+        if($_SERVER['REQUEST_METHOD'] == "OPTIONS"){
+            http_response_code(200);
+            exit();
+        }
+
         $json_string = file_get_contents('php://input');
         $request = json_decode($json_string, true);
 
@@ -86,9 +114,9 @@ class AuthorController
         header('Content-Type: application/json; charset=utf-8');
         http_response_code(200);
         echo json_encode([
-            'code' => 200,
+            'code' => 201,
             'success' => true,
-            'message' => 'Author Updated successfully'
+            'message' => 'Author updated successfully'
         ]);
     }
 
