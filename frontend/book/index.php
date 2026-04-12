@@ -33,7 +33,7 @@
                                         <div
                                             style="flex: auto; justify-content: space-between; display: flex; align-items: center;">
                                             <h5>Data Buku</h5>
-                                            <a href="?page=book/store" class="btn btn-primary">Tambah Buku</a>
+                                            <a href="?page=book/store" class="btn btn-primary">Tambah Data Buku</a>
                                         </div>
 
 
@@ -80,15 +80,13 @@
             const requestGetBooks = new Request("http://localhost:8080/api/books");
 
             try {
-                const responseGetBooks = await fetch(requestGetBooks);
-                const jsonGetBooks = await responseGetBooks.json();
+                const books = await fetch(requestGetBooks).then(res => res.json());
 
-
-                if (jsonGetBooks.code === 200 && jsonGetBooks.success === true) {
+                if (books.code === 200 && books.success === true) {
                     const listbooks = document.getElementById('books-tbody');
 
                     let index = 0;
-                    jsonGetBooks.data.forEach(book => {
+                    books.data.forEach(book => {
                         const row = listbooks.insertRow(index);
                         
                         const cellId = row.insertCell(0);
@@ -118,10 +116,10 @@
                         const linkEditActionEl = document.createElement("a");
                         const linkDeleteActionEl = document.createElement("a");
 
-                        linkEditActionEl.setAttribute("href", `?page=book/update&id=${book.id}`);
+                        linkEditActionEl.setAttribute("href", `?page=book/update&id=${book.isbn}`);
                         linkEditActionEl.setAttribute("class", "btn btn-sm btn-warning");
 
-                        linkDeleteActionEl.setAttribute("href", `?page=book/destroy&id=${book.id}`);
+                        linkDeleteActionEl.setAttribute("href", `?page=book/destroy&id=${book.isbn}`);
                         linkDeleteActionEl.setAttribute("class", "btn btn-sm btn-danger");
                         linkDeleteActionEl.setAttribute("onclick", "return confirm('Yakin ingin menghapus?')");
 

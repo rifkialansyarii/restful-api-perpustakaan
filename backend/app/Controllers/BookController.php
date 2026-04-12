@@ -97,8 +97,8 @@ class BookController
         exit();
     }
 
-    public function show($id){
-        $book = Book::with(['authors', 'categories', 'publisher'])->find($id);
+    public function show(string $isbn){
+        $book = Book::with(['authors', 'categories', 'publisher'])->where('isbn', $isbn)->first();
 
         if(!$book){
             header('Content-Type: application/json; charset=utf-8');
@@ -171,11 +171,11 @@ class BookController
 
     }
 
-    public function update(int $id){
+    public function update(string $isbn){
         $json_string = file_get_contents('php://input');
         $request = json_decode($json_string, true);
 
-        $book = Book::find($id);
+        $book = Book::where('isbn', $isbn)->first();
         if(!$book){
             header('Content-Type: application/json; charset=utf-8');
             http_response_code(404);
@@ -222,8 +222,8 @@ class BookController
         ]);
     }
 
-    public function destroy(int $id){
-        $book = Book::find($id);
+    public function destroy(string $isbn){
+        $book = Book::where('isbn', $isbn)->first();
 
         if(!$book){
             header('Content-Type: application/json; charset=utf-8');

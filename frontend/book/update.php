@@ -16,8 +16,8 @@
                                         <ul class="breadcrumb">
                                             <li class="breadcrumb-item"><a href="index.php"><i
                                                         class="feather icon-home"></i></a></li>
-                                            <li class="breadcrumb-item"><a href="?page=book">Book Modul</a></li>
-                                            <li class="breadcrumb-item"><a href="?page=book/update">Update Buku</a></li>
+                                            <li class="breadcrumb-item"><a href="?page=book">Modul Buku</a></li>
+                                            <li class="breadcrumb-item"><a href="?page=book/update">Update Data Buku</a></li>
                                         </ul>
                                     </div>
                                 </div>
@@ -31,7 +31,7 @@
 
                                 <div class="card">
                                     <div class="card-header">
-                                        <h5>Update Buku</h5>
+                                        <h5>Update Data Buku</h5>
                                     </div>
                                     <div class="card-body">
                                         <div class="row">
@@ -97,7 +97,7 @@
 
                                                 <script>
                                                     const urlParams = new URLSearchParams(window.location.search);
-                                                    const bookId = urlParams.get('id');
+                                                    const bookIsbnParam = urlParams.get('id');
                                                     let authorOptionsHTML = '';
                                                     let categoryOptionsHTML = '';
                                                     let authorCount = 1;
@@ -105,28 +105,22 @@
 
                                                     async function fetchMasterData() {
                                                         try {
-                                                            const [pubRes, authRes, catRes] = await Promise.all([
-                                                                fetch("http://localhost:8080/api/publishers"),
-                                                                fetch("http://localhost:8080/api/authors"),
-                                                                fetch("http://localhost:8080/api/categories"),
-                                                            ]);
-
-                                                            const [pubJson, authJson, catJson] = await Promise.all([
-                                                                pubRes.json(),
-                                                                authRes.json(),
-                                                                catRes.json(),
+                                                            const [publishers, authors, categories] = await Promise.all([
+                                                                fetch("http://localhost:8080/api/publishers").then(res => res.json()),
+                                                                fetch("http://localhost:8080/api/authors").then(res => res.json()),
+                                                                fetch("http://localhost:8080/api/categories").then(res => res.json()),
                                                             ]);
 
                                                             const publisherSelect = document.getElementById('publisher');
-                                                            if (pubJson.success) {
-                                                                pubJson.data.forEach(pub => {
+                                                            if (publishers.success) {
+                                                                publishers.data.forEach(pub => {
                                                                     publisherSelect.insertAdjacentHTML('beforeend', `<option value="${pub.publisher_name}">${pub.publisher_name}</option>`);
                                                                 });
                                                             }
 
                                                             const authorSelect1 = document.getElementById('authors-1');
-                                                            if (authJson.success) {
-                                                                authJson.data.forEach(auth => {
+                                                            if (authors.success) {
+                                                                authors.data.forEach(auth => {
                                                                     const opt = `<option value="${auth.author_name}">${auth.author_name}</option>`;
                                                                     authorOptionsHTML += opt;
                                                                     authorSelect1.insertAdjacentHTML('beforeend', opt);
@@ -134,8 +128,8 @@
                                                             }
 
                                                             const categorySelect1 = document.getElementById('kategoris-1');
-                                                            if (catJson.success) {
-                                                                catJson.data.forEach(cat => {
+                                                            if (categories.success) {
+                                                                categories.data.forEach(cat => {
                                                                     const opt = `<option value="${cat.category_name}">${cat.category_name}</option>`;
                                                                     categoryOptionsHTML += opt;
                                                                     categorySelect1.insertAdjacentHTML('beforeend', opt);
@@ -269,12 +263,12 @@
                                                     }
 
                                                     async function getDetailBook() {
-                                                        if (!bookId) {
+                                                        if (!bookIsbnParam) {
                                                             console.error('Book ID tidak ditemukan di URL.');
                                                             return;
                                                         }
 
-                                                        const requestDetailBook = new Request(`http://localhost:8080/api/books/${bookId}`);
+                                                        const requestDetailBook = new Request(`http://localhost:8080/api/books/${bookIsbnParam}`);
                                                         try {
                                                             const responseGetDetailBook = await fetch(requestDetailBook);
                                                             const jsonDetailBook = await responseGetDetailBook.json();
@@ -335,7 +329,7 @@
                                                             return;
                                                         }
 
-                                                        const request = new Request(`http://localhost:8080/api/books/${bookId}`, {
+                                                        const request = new Request(`http://localhost:8080/api/books/${bookIsbnParam}`, {
                                                             method: "PATCH",
                                                             headers: {
                                                                 "Content-Type": "application/json",
