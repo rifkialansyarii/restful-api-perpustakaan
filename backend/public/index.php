@@ -28,10 +28,10 @@ Router::add("DELETE", "/borrows/([A-Za-z0-9\-]+)", "App\Controllers\BorrowContro
 
 
 Router::add("GET", "/books", "App\Controllers\BookController", "index");
-Router::add("GET", "/books/([0-9]+)", "App\Controllers\BookController", "show");
+Router::add("GET", "/books/([0-9\-]+)", "App\Controllers\BookController", "show");
 Router::add("POST", "/books", "App\Controllers\BookController", "store");
-Router::add("PATCH", "/books/([0-9]+)", "App\Controllers\BookController", "update");
-Router::add("DELETE", "/books/([0-9]+)", "App\Controllers\BookController", "destroy");
+Router::add("PATCH", "/books/([A-Za-z0-9\-]+)", "App\Controllers\BookController", "update");
+Router::add("DELETE", "/books/([A-Za-z0-9\-]+)", "App\Controllers\BookController", "destroy");
 
 
 Router::add("GET", "/authors", "App\Controllers\AuthorController", "index");

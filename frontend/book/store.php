@@ -16,7 +16,7 @@
                                         <ul class="breadcrumb">
                                             <li class="breadcrumb-item"><a href="index.php"><i
                                                         class="feather icon-home"></i></a></li>
-                                            <li class="breadcrumb-item"><a href="?page=book">book Modul</a>
+                                            <li class="breadcrumb-item"><a href="?page=book">Modul Buku</a>
                                             </li>
                                         </ul>
                                     </div>
@@ -31,7 +31,7 @@
 
                                 <div class="card">
                                     <div class="card-header">
-                                        <h5>Buku Form</h5>
+                                        <h5>Form Buku</h5>
                                     </div>
                                     <div class="card-body">
                                         <div class="row">
@@ -101,31 +101,31 @@
 
                                                     async function fetchMasterData() {
                                                         try {
-                                                            const pubRes = await fetch("http://localhost:8080/api/publishers");
-                                                            const pubJson = await pubRes.json();
+                                                            const [publishers, authors, categories] = await Promise.all([
+                                                                fetch("http://localhost:8080/api/publishers").then(res => res.json()),
+                                                                fetch("http://localhost:8080/api/authors").then(res => res.json()),
+                                                                fetch("http://localhost:8080/api/categories").then(res => res.json())
+                                                            ]);
+
                                                             const publisherSelect = document.getElementById('publisher');
-                                                            if (pubJson.success) {
-                                                                pubJson.data.forEach(pub => {
+                                                            if (publishers.success) {
+                                                                publishers.data.forEach(pub => {
                                                                     publisherSelect.insertAdjacentHTML('beforeend', `<option value="${pub.publisher_name}">${pub.publisher_name}</option>`);
                                                                 });
                                                             }
 
-                                                            const authRes = await fetch("http://localhost:8080/api/authors");
-                                                            const authJson = await authRes.json();
                                                             const authorSelect1 = document.getElementById('authors-1');
-                                                            if (authJson.success) {
-                                                                authJson.data.forEach(auth => {
+                                                            if (authors.success) {
+                                                                authors.data.forEach(auth => {
                                                                     const opt = `<option value="${auth.author_name}">${auth.author_name}</option>`;
                                                                     authorOptionsHTML += opt;
                                                                     authorSelect1.insertAdjacentHTML('beforeend', opt);
                                                                 });
                                                             }
 
-                                                            const catRes = await fetch("http://localhost:8080/api/categories");
-                                                            const catJson = await catRes.json();
                                                             const categorySelect1 = document.getElementById('kategoris-1');
-                                                            if (catJson.success) {
-                                                                catJson.data.forEach(cat => {
+                                                            if (categories.success) {
+                                                                categories.data.forEach(cat => {
                                                                     const opt = `<option value="${cat.category_name}">${cat.category_name}</option>`;
                                                                     categoryOptionsHTML += opt;
                                                                     categorySelect1.insertAdjacentHTML('beforeend', opt);
@@ -210,10 +210,6 @@
                                                         });
                                                     }
 
-
-
-
-
                                                     function validateForm(...arrayInput) {
 
                                                         arrayInput.forEach(item => {
@@ -270,9 +266,8 @@
 
 
                                                         try {
-                                                            const response = await fetch(request);
-                                                            const json = await response.json();
-                                                            if (json.code === 201 && json.success === true) {
+                                                            const response = await fetch(request).then(res => res.json());
+                                                            if (response.code === 201 && response.success === true) {
                                                                 alert("Berhasil Menambahkan Buku");
                                                             }
                                                         } catch (error) {
