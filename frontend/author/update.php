@@ -16,7 +16,7 @@
                                         <ul class="breadcrumb">
                                             <li class="breadcrumb-item"><a href="index.php"><i
                                                         class="feather icon-home"></i></a></li>
-                                            <li class="breadcrumb-item"><a href="?page=author">Author Modul</a></li>
+                                            <li class="breadcrumb-item"><a href="?page=author">Modul Author</a></li>
                                         </ul>
                                     </div>
                                 </div>
@@ -30,16 +30,16 @@
 
                                 <div class="card">
                                     <div class="card-header">
-                                        <h5>Author Form</h5>
+                                        <h5>Form Author</h5>
                                     </div>
                                     <div class="card-body">
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <form method="POST" name="authorForm">
                                                     <div class="mb-3">
-                                                        <label class="form-label" for="author_name">Author Name</label>
+                                                        <label class="form-label" for="author_name">Nama Author</label>
                                                         <input type="text" class="form-control" id="author_name"
-                                                            name="author_name" placeholder="Enter Author Name" required>
+                                                            name="author_name" placeholder="Masukkan Nama Author" required>
                                                     </div>
                                                     <button type="submit" name="simpan"
                                                         class="btn btn-primary mb-4">Submit</button>
@@ -60,11 +60,10 @@
                                                         const requestDetailAuthor = new Request(`http://localhost:8080/api/authors/${authorId}`);
 
                                                         try {
-                                                            const responseGetDetailAuthor = await fetch(requestDetailAuthor);
-                                                            const jsonDetailAuthor = await responseGetDetailAuthor.json();
+                                                            const author = await fetch(requestDetailAuthor).then(res => res.json());
 
-                                                            if(jsonDetailAuthor.code === 200 && jsonDetailAuthor.success === true){
-                                                                document.getElementById("author_name").setAttribute('value', jsonDetailAuthor.data.author_name);
+                                                            if(author.code === 200 && author.success === true){
+                                                                document.getElementById("author_name").setAttribute('value', author.data.author_name);
                                                             }
                                                         } catch (error) {
                                                             console.error("Error get detail author: " + error);
@@ -91,9 +90,8 @@
 
 
                                                         try {
-                                                            const response = await fetch(request);
-                                                            const json = await response.json();
-                                                            if (json.code === 201 && json.success === true && json.message === "Author updated successfully") {
+                                                            const response = await fetch(request).then(res => res.json());
+                                                            if (response.code === 201 && response.success === true && response.message === "Author updated successfully") {
                                                                 alert("Berhasil Mengedit Author");
                                                             }
                                                         } catch (error) {
