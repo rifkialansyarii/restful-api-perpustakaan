@@ -21,4 +21,3 @@ services:
 networks:
   restful-api-perpustakaan:
     driver: bridge
-  
