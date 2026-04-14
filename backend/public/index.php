@@ -11,7 +11,7 @@ use Base\Router;
  * You should access all of this route using /api/<endpoint>
  */
 
-header("Access-Control-Allow-Origin: http://127.0.0.1:8081"); 
+header("Access-Control-Allow-Origin: http://127.0.0.1:8081,http://localhost:8081"); 
 header("Access-Control-Allow-Methods: GET, POST, OPTIONS, PATCH, DELETE");
 header("Access-Control-Allow-Headers: Content-Type, Accept");
 

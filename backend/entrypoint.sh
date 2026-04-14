@@ -1,11 +1,9 @@
 #!/bin/bash
-if [ ! -f "perpustakaan.db3" ]; then
-    touch perpustakaan.db3
+if [ ! -f "db-init/perpustakaan.db3" ]; then
+    mkdir db-init
+    touch db-init/perpustakaan.db3
     chmod 666 perpustakaan.db3
     php database/migration.php
-    php database/seeder.php
-
-    chown -R www-data:www-data .
-    
+    php database/seeder.php    
 fi
 php-fpm -D && nginx -g "daemon off;"

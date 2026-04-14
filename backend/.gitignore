@@ -31,4 +31,4 @@ auth.json
 
 test-input-data.php
 
-*db.3
+db-init/*
