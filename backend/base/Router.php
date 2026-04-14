@@ -18,7 +18,9 @@
 
         public static function run(){
             
-            $path = $_SERVER["PATH_INFO"] ?? '/';
+            $rawPath = $_SERVER["REQUEST_URI"] ?? '/';
+            $path = parse_url($rawPath, PHP_URL_PATH);
+
             $method = $_SERVER["REQUEST_METHOD"];
 
 

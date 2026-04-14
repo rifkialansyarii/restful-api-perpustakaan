@@ -1,0 +1,24 @@
+services:
+  
+  frontend:
+    build: ./frontend 
+    ports:
+      - "8081:8081"
+    networks:
+      - restful-api-perpustakaan
+    volumes:
+      - ./frontend:/var/www/frontend
+    
+  backend:
+    build: ./backend
+    ports:
+      - "8080:8080"
+    networks:
+      - restful-api-perpustakaan
+    volumes:
+      - ./backend:/var/www/backend
+
+networks:
+  restful-api-perpustakaan:
+    driver: bridge
+  
