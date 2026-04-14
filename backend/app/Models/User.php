@@ -14,7 +14,7 @@ class User extends Eloquent
      * @var array
      */
     protected $fillable = [
-        'api_token', 'nisn', 'nip', 'first_name', 'last_name', 'username', 'password', 'whatsapp_number', 'role'
+        'nisn', 'first_name', 'last_name', 'username', 'password', 'whatsapp_number', 'role'
     ];
 
     /**

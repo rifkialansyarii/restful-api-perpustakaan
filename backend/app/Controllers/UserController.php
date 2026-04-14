@@ -6,8 +6,9 @@ use App\Models\User;
 
 class UserController
 {
-    private function checkUser($user){
-        if(!$user){
+    private function checkUser($user)
+    {
+        if (!$user) {
             header('Content-Type: application/json; charset=utf-8');
             http_response_code(404);
             echo json_encode([
@@ -19,26 +20,8 @@ class UserController
         }
     }
 
-    private function checkRoleInput($request){
-        $userData = [
-                'first_name' => $request['first_name'],
-                'last_name' => $request['last_name'],
-                'username' => $request['username'],
-                'password' => password_hash($request['password'], PASSWORD_BCRYPT),
-                'whatsapp_number' => $request['whatsapp_number'],
-                'role' => $request['role']
-        ];
-
-        if(isset($request['nisn']) && !isset($request['nip'])){
-            $userData['nisn'] = $request['nisn'];
-            return $userData;
-        }else if(isset($request['nip']) && !isset($request['nisn'])){
-            $userData['nip'] = $request['nip'];
-            return $userData;
-        }
-    }
-
-    public function index(){
+    public function index()
+    {
         $users = User::all();
 
         header('Content-Type: application/json; charset=utf-8');
@@ -50,8 +33,9 @@ class UserController
         ]);
         exit();
     }
-    
-    public function show($id){
+
+    public function show($id)
+    {
         $user = User::find($id);
 
         header('Content-Type: application/json; charset=utf-8');
@@ -64,11 +48,18 @@ class UserController
         exit();
     }
 
-    public function store(){
+    public function store()
+    {
         $json_string = file_get_contents('php://input');
         $request = json_decode($json_string, true);
 
-        $userData = $this->checkRoleInput($request);
+        $userData = [
+            'nisn' => $request['nisn'],
+            'first_name' => $request['first_name'],
+            'last_name' => $request['last_name'],
+            'whatsapp_number' => $request['whatsapp_number'],
+            'role' => $request['role']
+        ];
 
         User::create($userData);
 
@@ -81,36 +72,14 @@ class UserController
         ]);
         exit();
     }
-    
-    public function update(int $id){
+
+    public function update(int $id)
+    {
         $json_string = file_get_contents('php://input');
         $request = json_decode($json_string, true);
 
         $user = User::find($id);
         $this->checkUser($user);
-    
-        if($user->role == 'student' && isset($request['nip'])){
-            unset($request['nip']);
-
-            header('Content-Type: application/json; charset=utf-8');
-            http_response_code(403);
-            echo json_encode([
-                'code' => 403,
-                'success' => false,
-                'message' => 'Cannot update because role is collision'
-            ]);
-            exit();
-        }else if($user->role == 'staff' && isset($request['nisn'])){
-            unset($request['nisn']);
-            header('Content-Type: application/json; charset=utf-8');
-            http_response_code(403);
-            echo json_encode([
-                'code' => 403,
-                'success' => false,
-                'message' => 'Cannot update because role is collision'
-            ]);
-            exit();
-        }
 
         $user->update($request);
 
@@ -123,11 +92,16 @@ class UserController
         ]);
     }
 
-    public function destroy(int $id){
+    public function destroy(int $id)
+    {
         $user = User::find($id);
-        
+
         $this->checkUser($user);
 
+        $user->update([
+            "whatsapp_number" => $user->whatsapp_number . "_deleted_" . time(),
+            "nisn" => $user->nisn . "_deleted_" . time()
+        ]);
         $user->delete();
 
         header('Content-Type: application/json; charset=utf-8');

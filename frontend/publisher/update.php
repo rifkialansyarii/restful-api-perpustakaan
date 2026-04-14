@@ -108,7 +108,7 @@
                                                                 "Accept": "application/json",
                                                             },
                                                             body: JSON.stringify({
-                                                                "publsher_name": pubEl,
+                                                                "publisher_name": pubEl,
                                                                 "address": alamatEl,
                                                             })
                                                         });
