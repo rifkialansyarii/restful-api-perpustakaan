@@ -27,6 +27,17 @@ DB_CONNECTION=sqlite
 DB_DATABASE=database-name
 ```
 
+Sesuaikan backend/entrypoint.sh:
+
+```bash
+# SNIP CODE #
+
+DB_DIR="database/data"
+DB_FILE="$DB_DIR/<your-name-database>.db3"
+
+# SNIP CODE #
+```
+
 Jalankan perintah berikut:
 
 ```bash
