@@ -31,12 +31,62 @@
                     </li>
 					
                     <li class="nav-item">
-                        <a href="?page=pelanggan" class="nav-link">
+                        <a href="?page=borrow" class="nav-link">
                             <span class="pcoded-micon">
                                 <i class="feather icon-sidebar"></i>
                             </span>
                             <span class="pcoded-mtext">
-                                Pelanggan
+                                Peminjaman
+                            </span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="?page=book" class="nav-link">
+                            <span class="pcoded-micon">
+                                <i class="feather icon-sidebar"></i>
+                            </span>
+                            <span class="pcoded-mtext">
+                                Buku
+                            </span>
+                        </a>
+                    </li>
+                     <li class="nav-item">
+                        <a href="?page=author" class="nav-link">
+                            <span class="pcoded-micon">
+                                <i class="feather icon-sidebar"></i>
+                            </span>
+                            <span class="pcoded-mtext">
+                                Author
+                            </span>
+                        </a>
+                    </li>
+                      <li class="nav-item">
+                        <a href="?page=category" class="nav-link">
+                            <span class="pcoded-micon">
+                                <i class="feather icon-sidebar"></i>
+                            </span>
+                            <span class="pcoded-mtext">
+                                Kategori
+                            </span>
+                        </a>
+                    </li>
+                      <li class="nav-item">
+                        <a href="?page=publisher" class="nav-link">
+                            <span class="pcoded-micon">
+                                <i class="feather icon-sidebar"></i>
+                            </span>
+                            <span class="pcoded-mtext">
+                                Publisher
+                            </span>
+                        </a>
+                    </li>
+                      <li class="nav-item">
+                        <a href="?page=user" class="nav-link">
+                            <span class="pcoded-micon">
+                                <i class="feather icon-sidebar"></i>
+                            </span>
+                            <span class="pcoded-mtext">
+                                User
                             </span>
                         </a>
                     </li>

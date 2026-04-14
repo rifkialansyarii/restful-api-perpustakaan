@@ -1,2 +1,2 @@
-nim=J1F108005
-nama=Muhammad Syahid Pebriadi
+nim=C030324015
+nama=Rifki Al Ansyari
