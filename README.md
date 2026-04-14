@@ -24,7 +24,7 @@ Sesuaikan valuenya (khusus sqlite saja):
 ```text
 #DATABASE CONNECTION
 DB_CONNECTION=sqlite
-DB_DATABASE=sqlite-file-name
+DB_DATABASE=database-name
 ```
 
 Jalankan perintah berikut:
