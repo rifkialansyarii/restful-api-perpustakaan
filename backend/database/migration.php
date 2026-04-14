@@ -56,15 +56,11 @@ Capsule::schema()->create('book_categories', function ($table) {
 
 Capsule::schema()->create('users', function ($table) {
     $table->id();
-    $table->char('nisn', 10)->nullable()->unique()->default(null);
-    $table->char('nip', 18)->nullable()->unique()->default(null);
+    $table->string('nisn')->nullable()->unique()->default(null);
     $table->string('first_name');
     $table->string('last_name')->nullable();
-    $table->string('username')->unique();
-    $table->string('password');
     $table->string('whatsapp_number')->unique();
-    $table->enum('role', ['admin', 'student', 'staff']);
-    $table->string('api_token')->unique();
+    $table->enum('role', ['admin', 'student']);
     $table->timestamps();
     $table->softDeletes();
 });
