@@ -2,7 +2,7 @@
 set -e
 
 DB_DIR="database/data"
-DB_FILE="$DB_DIR/perpustakaan.db3"
+DB_FILE="$DB_DIR/<your-name-database>.db3"
 
 mkdir -p "$DB_DIR"
 
