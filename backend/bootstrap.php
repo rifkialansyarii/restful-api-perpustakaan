@@ -13,7 +13,7 @@ $capsule->addConnection([
     'driver' => $_ENV['DB_CONNECTION'],
     // 'host' => $_ENV['DB_HOST'],
     // 'port' => $_ENV['DB_PORT'],
-    'database' => __DIR__ . "/" . $_ENV['DB_DATABASE'],
+    'database' => __DIR__ . "/db-init/" . $_ENV['DB_DATABASE'] . ".db3",
     // 'username' => $_ENV['DB_USERNAME'],
     // 'password' => $_ENV['DB_PASSWORD'],
 ]);
