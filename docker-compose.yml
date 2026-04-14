@@ -1,13 +1,10 @@
 services:
-  
   frontend:
     build: ./frontend 
     ports:
       - "8081:8081"
     networks:
       - restful-api-perpustakaan
-    volumes:
-      - ./frontend:/var/www/frontend
     
   backend:
     build: ./backend
@@ -16,8 +13,11 @@ services:
     networks:
       - restful-api-perpustakaan
     volumes:
-      - ./backend:/var/www/backend
+      - db-prod-data:/var/www/backend/database/data
 
 networks:
   restful-api-perpustakaan:
     driver: bridge
+
+volumes:
+  db-prod-data:
