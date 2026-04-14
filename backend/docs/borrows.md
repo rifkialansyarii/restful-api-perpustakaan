@@ -17,9 +17,8 @@ Request Body:
 
 ```json
 {
-    "nisn": "0012345678",
-    "isbn": "9786020318639",
-    "status": "borrowed"
+    "user": "John Doe - 0012345678",
+    "book": "Book Title - 9786020318639"
 }
 ```
 
@@ -65,12 +64,14 @@ Response Body Error - already borrowed:
 
 ## Update borrow API
 
-Endpoint : PATCH /localhost/api/borrows/(id)
+Endpoint : PATCH /localhost/api/borrows/(borrow_code)
 
 Request Body:
 
 ```json
 {
+    "user": "Jane Doe - 0012345679",
+    "book": "Another Book Title - 9786020318640",
     "status": "returned"
 }
 ```
@@ -123,7 +124,7 @@ Response Body Success:
 
 ## Get borrow detail API
 
-Endpoint : GET /localhost/api/borrows/(id)
+Endpoint : GET /localhost/api/borrows/(borrow_code)
 
 Response Body Success:
 
@@ -157,7 +158,7 @@ Response Body Error:
 
 ## Remove borrow API
 
-Endpoint : DELETE /localhost/api/borrows/(id)
+Endpoint : DELETE /localhost/api/borrows/(borrow_code)
 
 Response Body Success:
 
