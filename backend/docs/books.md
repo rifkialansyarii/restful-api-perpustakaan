@@ -57,7 +57,7 @@ Response Body Error:
 
 ## Update book API
 
-Endpoint : PATCH /localhost/api/books/(id)
+Endpoint : PATCH /localhost/api/books/(isbn)
 
 Request Body (set one or more fields):
 
@@ -116,7 +116,7 @@ Response Body Success:
 
 ## Get book detail API
 
-Endpoint : GET /localhost/api/books/(id)
+Endpoint : GET /localhost/api/books/(isbn)
 
 Response Body Success:
 
@@ -148,7 +148,7 @@ Response Body Error:
 
 ## Remove book API
 
-Endpoint : DELETE /localhost/api/books/(id)
+Endpoint : DELETE /localhost/api/books/(isbn)
 
 Response Body Success:
 
